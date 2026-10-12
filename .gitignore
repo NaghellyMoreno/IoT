@@ -1,0 +1,42 @@
+# --- Secretos / credenciales ---
+.env
+.env.*
+!.env.example
+secrets.h
+arduino_secrets.h
+
+# --- macOS ---
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.so
+.venv/
+venv/
+env/
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# --- Arduino / PlatformIO ---
+build/
+*.hex
+*.elf
+*.bin
+*.map
+.pio/
+.pioenvs/
+.piolibdeps/
+
+# --- Editores / IDE ---
+.vscode/
+.idea/
+*.swp
+*~
+
+# --- Logs ---
+*.log

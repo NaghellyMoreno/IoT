@@ -1,26 +1,16 @@
-// ============================================================
 // LABORATORIO IoT #3 — Sistema de control de acceso
-// Versión: ESP32 DevKit (ESP-WROOM-32) — Core 3.3.12
-// Materia: Fundamentos de Internet de las Cosas (351G8F)
-// ============================================================
-// Sensor ultrasónico HC-SR04 + servo SG90 + LEDs + buzzer
-// Comunica eventos por Serial (115200) al script Python
-// que hace de puente hacia el bot de Telegram.
-// ============================================================
 
-#include <ESP32Servo.h>   // DIFERENCIA Uno/ESP32: ESP32Servo en lugar de Servo.h
-// Instalar: Gestor de Librerías → "ESP32Servo" por Kevin Harrington, John K. Bennett
+#include <ESP32Servo.h>   
 
-// ======================== PINES ==============================
-// DIFERENCIA Uno/ESP32: pines distintos, lógica 3.3 V
-const int PIN_TRIG       = 26;  // GPIO26 (D26) — disparo HC-SR04
-const int PIN_ECHO       = 27;  // GPIO27 (D27) — eco HC-SR04 (con divisor 5V→3.3V)
-const int PIN_SERVO      = 25;  // GPIO25 (D25) — señal servo (3.3 V válido para SG90)
-const int PIN_LED_VERDE  = 4;   // GPIO4  (D4)  — LED verde
-const int PIN_LED_ROJO   = 13;  // GPIO13 (D13) — LED rojo
-const int PIN_BUZZER     = 33;  // GPIO33 (D33) — buzzer activo KY-012
+//  PINES 
+const int PIN_TRIG       = 26;  // GPIO26 (D26) 
+const int PIN_ECHO       = 27;  // GPIO27 (D27) 
+const int PIN_SERVO      = 25;  // GPIO25 (D25) 
+const int PIN_LED_VERDE  = 4;   // GPIO4  (D4)  
+const int PIN_LED_ROJO   = 13;  // GPIO13 (D13)
+const int PIN_BUZZER     = 33;  // GPIO33 (D33) 
 
-// ==================== PARÁMETROS =============================
+//  PARÁMETROS 
 const float DIST_ACTIVACION   = 30.0;  // cm — distancia de detección
 const unsigned long TIEMPO_CIERRE   = 3000;  // ms — espera antes de cerrar
 const unsigned long TIEMPO_ALARMA   = 10000; // ms — puerta abierta → alarma
@@ -31,12 +21,12 @@ const int           NUM_MUESTRAS      = 3;    // promedio de lecturas
 const int ANGULO_CERRADO = 0;
 const int ANGULO_ABIERTO = 90;
 
-// =================== MÁQUINA DE ESTADOS ======================
+//  MÁQUINA DE ESTADOS 
 enum EstadoPuerta { CERRADA, ABIERTA, ALARMA };
 EstadoPuerta estadoActual = CERRADA;
 
-// ================== VARIABLES GLOBALES =======================
-Servo actuador;   // DIFERENCIA Uno/ESP32: mismo nombre, distinta librería
+//  VARIABLES GLOBALES 
+Servo actuador;   
 
 unsigned long tiempoUltimaMedicion = 0;
 unsigned long tiempoApertura       = 0;
@@ -44,10 +34,7 @@ unsigned long tiempoUltimaPersona  = 0;
 float         distanciaActual      = 0.0;
 int           contadorAccesos      = 0;
 
-// ============================================================
 // FUNCIONES AUXILIARES
-// ============================================================
-
 // Mide distancia con el HC-SR04 (devuelve cm; 0 si no hay eco)
 float medirDistanciaUnica() {
   digitalWrite(PIN_TRIG, LOW);
@@ -108,16 +95,13 @@ void enviarEvento(const char* evento) {
   Serial.println(evento);
 }
 
-// ============================================================
 // MÁQUINA DE ESTADOS
-// ============================================================
-
 void actualizarEstado() {
   unsigned long ahora = millis();
 
   switch (estadoActual) {
 
-    // ---------- CERRADA: esperando detección ----------
+    //  CERRADA: esperando detección 
     case CERRADA:
       if (personaDetectada(distanciaActual)) {
         estadoActual = ABIERTA;
@@ -136,7 +120,7 @@ void actualizarEstado() {
       }
       break;
 
-    // ---------- ABIERTA: puerta abierta, persona cerca ----------
+    //  ABIERTA: puerta abierta, persona cerca 
     case ABIERTA:
       if (personaDetectada(distanciaActual)) {
         tiempoUltimaPersona = ahora;
@@ -157,7 +141,7 @@ void actualizarEstado() {
       }
       break;
 
-    // ---------- ALARMA: puerta abierta demasiado tiempo ----------
+    //  ALARMA: puerta abierta demasiado tiempo 
     case ALARMA:
       if (personaDetectada(distanciaActual)) {
         tiempoUltimaPersona = ahora;
@@ -174,12 +158,10 @@ void actualizarEstado() {
   }
 }
 
-// ============================================================
 // SETUP Y LOOP
-// ============================================================
 
 void setup() {
-  Serial.begin(115200);  // DIFERENCIA Uno/ESP32: 115200 vs 9600
+  Serial.begin(115200);  
 
   pinMode(PIN_TRIG, OUTPUT);
   pinMode(PIN_ECHO, INPUT);

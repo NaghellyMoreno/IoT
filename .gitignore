@@ -40,3 +40,6 @@ build/
 
 # --- Logs ---
 *.log
+
+# Credenciales
+**/secrets.h

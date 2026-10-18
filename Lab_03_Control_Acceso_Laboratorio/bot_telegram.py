@@ -4,7 +4,7 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
 
 #  CONFIGURACIÓN 
-TOKEN = "8899533101:AAEZR-z-AZ49NYb0RUxMJAifWDnhHdEvZQs"
+TOKEN = ""
 
 # Puerto serial 
 PUERTO_SERIAL = "/dev/cu.usbserial-0001"
